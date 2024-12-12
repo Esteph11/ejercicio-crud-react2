@@ -1,47 +1,51 @@
-import React from 'react';  
-import Swal from 'sweetalert2';  
+import React, { useState } from 'react';  
+import { ToastContainer, toast } from 'react-toastify';  
+import 'react-toastify/dist/ReactToastify.css';  
 
-const CategoryList = ({ categories, onEdit, onDelete }) => {  
-    const handleDelete = (id, name) => {  
-        Swal.fire({  
-            title: `¿Eliminar categoría "${name}"?`,  
-            icon: 'warning',  
-            showCancelButton: true,  
-            confirmButtonText: 'Eliminar',  
-            cancelButtonText: 'Cancelar',  
-        }).then((result) => {  
-            if (result.isConfirmed) onDelete(id);  
-        });  
+const CategoryForm = ({ addCategory }) => {  
+    const [category, setCategory] = useState({ name: '', image: '' });  
+
+    const handleChange = (e) => {  
+        setCategory({ ...category, [e.target.name]: e.target.value });  
+    };  
+
+    const handleSubmit = (e) => {  
+        e.preventDefault();  
+        if (!category.name || !category.image) {  
+            toast.error("Todos los campos son obligatorios");  
+            return;  
+        }  
+        addCategory(category);  
+        setCategory({ name: '', image: '' });  
+        toast.success("Categoría añadida con éxito");  
     };  
 
     return (  
-        <div className="row">  
-            {categories.map((category) => (  
-                <div className="col-md-4 mb-4" key={category.id}>  
-                    <div className="card">  
-                        <img src={category.image} className="card-img-top" alt={category.name} />  
-                        <div className="card-body">  
-                            <h5 className="card-title">{category.name}</h5>  
-                            <div className="d-flex justify-content-between">  
-                                <button  
-                                    className="btn btn-warning btn-sm"  
-                                    onClick={() => onEdit(category)}  
-                                >  
-                                    Editar  
-                                </button>  
-                                <button  
-                                    className="btn btn-danger btn-sm"  
-                                    onClick={() => handleDelete(category.id, category.name)}  
-                                >  
-                                    Eliminar  
-                                </button>  
-                            </div>  
-                        </div>  
-                    </div>  
-                </div>  
-            ))}  
-        </div>  
+        <form onSubmit={handleSubmit} className="mb-3">  
+            <div className="form-group">  
+                <label>Nombre de la Categoría</label>  
+                <input  
+                    type="text"  
+                    className="form-control"  
+                    name="name"  
+                    value={category.name}  
+                    onChange={handleChange}  
+                />  
+            </div>  
+            <div className="form-group">  
+                <label>URL de la Imagen</label>  
+                <input  
+                    type="text"  
+                    className="form-control"  
+                    name="image"  
+                    value={category.image}  
+                    onChange={handleChange}  
+                />  
+            </div>  
+            <button type="submit" className="btn btn-primary">Agregar Categoría</button>  
+            <ToastContainer />  
+        </form>  
     );  
 };  
 
-export default CategoryList;  
+export default CategoryForm;  

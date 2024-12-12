@@ -1,3 +1,4 @@
+// src/api.js  
 import axios from 'axios';  
 
 const API_URL = 'https://api.escuelajs.co/api/v1/categories';  
@@ -44,4 +45,4 @@ export const deleteCategory = async (id) => {
         console.error('Error deleting category:', error);  
         throw error;  
     }  
-}; 
+};
